@@ -20,6 +20,7 @@
 		7D4F75221E77B4C400C6A03E /* zhanweitu.png in Resources */ = {isa = PBXBuildFile; fileRef = 7D4F75211E77B4C400C6A03E /* zhanweitu.png */; };
 		7D4F75271E77B50700C6A03E /* NSFileManager+pathMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D4F75241E77B50700C6A03E /* NSFileManager+pathMethod.m */; };
 		7D4F75281E77B50700C6A03E /* ZBCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D4F75261E77B50700C6A03E /* ZBCacheManager.m */; };
+		7D4F752B1E77C3A300C6A03E /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D4F752A1E77C3A300C6A03E /* ImageViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +66,8 @@
 		7D4F75241E77B50700C6A03E /* NSFileManager+pathMethod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+pathMethod.m"; sourceTree = "<group>"; };
 		7D4F75251E77B50700C6A03E /* ZBCacheManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZBCacheManager.h; sourceTree = "<group>"; };
 		7D4F75261E77B50700C6A03E /* ZBCacheManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZBCacheManager.m; sourceTree = "<group>"; };
+		7D4F75291E77C3A300C6A03E /* ImageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageViewController.h; sourceTree = "<group>"; };
+		7D4F752A1E77C3A300C6A03E /* ImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +123,8 @@
 				7D4F74EB1E77B1CE00C6A03E /* AppDelegate.m */,
 				7D4F74ED1E77B1CE00C6A03E /* ViewController.h */,
 				7D4F74EE1E77B1CE00C6A03E /* ViewController.m */,
+				7D4F75291E77C3A300C6A03E /* ImageViewController.h */,
+				7D4F752A1E77C3A300C6A03E /* ImageViewController.m */,
 				7D4F75211E77B4C400C6A03E /* zhanweitu.png */,
 				7D4F74F01E77B1CE00C6A03E /* Main.storyboard */,
 				7D4F74F31E77B1CE00C6A03E /* Assets.xcassets */,
@@ -307,6 +312,7 @@
 			files = (
 				7D4F75281E77B50700C6A03E /* ZBCacheManager.m in Sources */,
 				7D4F74EF1E77B1CE00C6A03E /* ViewController.m in Sources */,
+				7D4F752B1E77C3A300C6A03E /* ImageViewController.m in Sources */,
 				7D4F74EC1E77B1CE00C6A03E /* AppDelegate.m in Sources */,
 				7D4F75271E77B50700C6A03E /* NSFileManager+pathMethod.m in Sources */,
 				7D4F75201E77B42800C6A03E /* UIImageView+ZBWebCache.m in Sources */,
@@ -541,6 +547,7 @@
 				7D4F75131E77B1CE00C6A03E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7D4F75141E77B1CE00C6A03E /* Build configuration list for PBXNativeTarget "ZBWebImageTests" */ = {
 			isa = XCConfigurationList;
@@ -549,6 +556,7 @@
 				7D4F75161E77B1CE00C6A03E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7D4F75171E77B1CE00C6A03E /* Build configuration list for PBXNativeTarget "ZBWebImageUITests" */ = {
 			isa = XCConfigurationList;
@@ -557,6 +565,7 @@
 				7D4F75191E77B1CE00C6A03E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
