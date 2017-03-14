@@ -119,11 +119,9 @@
 }
 
 - (void)dismissClicked:(UIButton *)sender{
-    
-    
     [self dismissViewControllerAnimated:YES completion:nil];
-    
 }
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
