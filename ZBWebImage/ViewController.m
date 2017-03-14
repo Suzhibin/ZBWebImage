@@ -1,0 +1,116 @@
+//
+//  ViewController.m
+//  ZBWebImage
+//
+//  Created by NQ UEC on 17/3/14.
+//  Copyright © 2017年 Suzhibin. All rights reserved.
+//
+
+#import "ViewController.h"
+#import "ZBWebImageManager.h"
+#import "UIImageView+ZBWebCache.h"
+#define IMAGE1   @"http://img04.tooopen.com/images/20130701/tooopen_10055061.jpg"
+
+#define IMAGE2   @"http://img06.tooopen.com/images/20161214/tooopen_sy_190570171299.jpg"
+//屏幕宽
+#define SCREEN_WIDTH                ([UIScreen mainScreen].bounds.size.width)
+//屏幕高
+#define SCREEN_HEIGHT               ([UIScreen mainScreen].bounds.size.height)
+
+@interface ViewController ()
+@property (strong, nonatomic) UIImageView *imageView1;
+@property (strong, nonatomic) UIImageView *imageView2;
+@property (strong, nonatomic) UILabel *label1;
+@property (strong, nonatomic) UILabel *label2;
+@end
+
+@implementation ViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view, typically from a nib.
+    NSString *cachePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject];
+    NSLog(@"cachePath = %@",cachePath);
+    
+    UILabel *label1=[[UILabel alloc]initWithFrame:CGRectMake(10,530, 200, 30)];
+    label1.textAlignment=NSTextAlignmentLeft;
+    label1.backgroundColor=[UIColor whiteColor];
+    [self.view addSubview:label1];
+    self.label1=label1;
+    
+    UILabel *label2=[[UILabel alloc]initWithFrame:CGRectMake(10,570, 200, 30)];
+    label2.textAlignment=NSTextAlignmentLeft;
+    label2.backgroundColor=[UIColor whiteColor];
+    [self.view addSubview:label2];
+    self.label2=label2;
+    
+    self.imageView1=[[UIImageView alloc]initWithFrame:CGRectMake(0, 64, SCREEN_WIDTH, 200)];
+
+    [self.view addSubview:self.imageView1];
+    [self.imageView1 zb_setImageWithURL:IMAGE1 placeholderImage:[UIImage imageNamed:@"zhanweitu"] completion:^(UIImage *image) {
+        //下载完毕显示缓存大小
+      [self sizeAndCount];
+
+    }];
+    
+    self.imageView2=[[UIImageView alloc]initWithFrame:CGRectMake(0, 300, SCREEN_WIDTH, 200)];
+    [[ZBWebImageManager sharedInstance]  downloadImageUrl:IMAGE2 completion:^(UIImage *image){
+        self.imageView2.image=image;
+        //下载完毕显示缓存大小
+       [self sizeAndCount];
+    }];
+
+    [self.view addSubview:self.imageView2];
+    
+    
+    NSArray *array=[NSArray arrayWithObjects:@"清除所有图片缓存",@"清除某一个图片缓存",nil];
+    
+    for (int i = 0; i<array.count; i++) {
+        
+        UIButton *button1=[UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [button1 setTitle:[array objectAtIndex:i] forState:UIControlStateNormal];
+        [button1 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        button1.tag=2000+i;
+        button1.backgroundColor=[UIColor brownColor];
+        button1.frame=CGRectMake(200,530+40*i,150, 30);
+        [button1 addTarget:self action:@selector(button1Clicked:) forControlEvents:UIControlEventTouchUpInside];
+        [self.view addSubview:button1];
+    }
+    
+
+    
+}
+- (void)button1Clicked:(UIButton *)sender{
+
+    NSArray *imageArray = @[IMAGE1,IMAGE2];
+    NSString *imageUrl = imageArray[arc4random() % imageArray.count];
+    
+    if (sender.tag==2000) {
+        //删除图片缓存 及完成操作
+        [[ZBWebImageManager sharedInstance] clearImageFileCompletion:^{
+            [self sizeAndCount];
+        }];
+        
+    }else if (sender.tag==2001){
+        //删除单个图片缓存 及完成操作
+        [[ZBWebImageManager sharedInstance] clearImageForkey:imageUrl completion:^{
+            [self sizeAndCount];
+        }];
+    }
+
+}
+- (void)sizeAndCount{
+    float imageSize=[[ZBWebImageManager sharedInstance] imageFileSize];//图片大小
+   self.label1.text=[NSString stringWithFormat:@"缓存图片大小:%@",[[ZBCacheManager sharedInstance] fileUnitWithSize:imageSize]];
+
+    float count=[[ZBWebImageManager sharedInstance] imageFileCount];//个数
+    self.label2.text=[NSString stringWithFormat:@"缓存图片数量:%.f",count];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
+@end
