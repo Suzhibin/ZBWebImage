@@ -117,7 +117,6 @@ static const NSInteger ImageCacheMaxCacheAge  = 60*60*24*7;
     [[ZBCacheManager sharedInstance]backgroundCleanCacheWithPath:[self imageFilePath]];
 }
 
-
 - (NSString *)imageFilePath{
     NSString *AppImagePath =  [[[ZBCacheManager sharedInstance]ZBKitPath]stringByAppendingPathComponent:ImageDefaultPath];
     return AppImagePath;

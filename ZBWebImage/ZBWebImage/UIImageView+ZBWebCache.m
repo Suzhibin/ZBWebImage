@@ -15,7 +15,7 @@
 }
 
 - (void)zb_setImageWithURL:(NSString *)imageUrl placeholderImage:(UIImage *)placeholder{
-    [self zb_setImageWithURL:imageUrl placeholderImage:placeholder path:nil];
+    [self zb_setImageWithURL:imageUrl placeholderImage:placeholder completion:nil];
 }
 
 - (void)zb_setImageWithURL:(NSString *)imageUrl placeholderImage:(UIImage *)placeholder path:(NSString *)path{
