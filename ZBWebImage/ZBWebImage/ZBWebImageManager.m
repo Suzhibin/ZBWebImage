@@ -110,7 +110,7 @@ static const NSInteger ImageCacheMaxCacheAge  = 60*60*24*7;
 }
 
 - (void)automaticCleanImageCache{
-    [[ZBCacheManager sharedInstance] automaticCleanCacheWithTime:-ImageCacheMaxCacheAge path:[self imageFilePath] completion:nil];
+    [[ZBCacheManager sharedInstance]clearCacheWithTime:-ImageCacheMaxCacheAge path:[self imageFilePath] completion:nil];
 }
 
 - (void)backgroundCleanImageCache {

@@ -22,7 +22,7 @@
 #import "NSFileManager+pathMethod.h"
 #import <CommonCrypto/CommonDigest.h>
 NSString *const PathSpace =@"ZBKit";
-NSString *const CacheDefaultPath =@"AppCache";
+NSString *const defaultCachePath =@"AppCache";
 static const NSInteger defaultCacheMaxCacheAge  = 60*60*24*7;
 //static const NSInteger defaultCacheMixCacheAge = 60;
 static const CGFloat unit = 1000.0;
@@ -51,7 +51,7 @@ static const NSInteger timeOut = 60*60;
         
          _operationQueue = dispatch_queue_create("com.dispatch.ZBCacheManager", DISPATCH_QUEUE_SERIAL);
         
-        [self initCachesfileWithName:CacheDefaultPath];
+        [self initCachesfileWithName:defaultCachePath];
         
         [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(automaticCleanCache) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -338,14 +338,14 @@ static const NSInteger timeOut = 60*60;
 
 #pragma  mark - 清除文件
 - (void)automaticCleanCache{
-   [self automaticCleanCacheWithTime:-defaultCacheMaxCacheAge completion:nil];
+   [self clearCacheWithTime:-defaultCacheMaxCacheAge completion:nil];
 }
 
-- (void)automaticCleanCacheWithTime:(NSTimeInterval)time completion:(ZBCacheCompletedBlock)completion{
-     [self automaticCleanCacheWithTime:time path:self.diskCachePath completion:completion];
+- (void)clearCacheWithTime:(NSTimeInterval)time completion:(ZBCacheCompletedBlock)completion{
+     [self clearCacheWithTime:time path:self.diskCachePath completion:completion];
 }
 
-- (void)automaticCleanCacheWithTime:(NSTimeInterval)time path:(NSString *)path completion:(ZBCacheCompletedBlock)completion{
+- (void)clearCacheWithTime:(NSTimeInterval)time path:(NSString *)path completion:(ZBCacheCompletedBlock)completion{
     dispatch_async(self.operationQueue,^{
         
         NSDate *expirationDate = [NSDate dateWithTimeIntervalSinceNow:time];
@@ -382,7 +382,7 @@ static const NSInteger timeOut = 60*60;
         bgTask = UIBackgroundTaskInvalid;
     }];
     // Start the long-running task and return immediately.
-    [self automaticCleanCacheWithTime:-defaultCacheMaxCacheAge path:path completion:^{
+    [self clearCacheWithTime:-defaultCacheMaxCacheAge path:path completion:^{
         [application endBackgroundTask:bgTask];
         bgTask = UIBackgroundTaskInvalid;
     }];
