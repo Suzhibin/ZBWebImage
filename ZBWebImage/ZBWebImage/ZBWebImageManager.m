@@ -10,7 +10,7 @@
 #import "NSFileManager+pathMethod.h"
 
 NSString *const ImageDefaultPath =@"AppImage";
-
+static const NSInteger ImageCacheMaxCacheAge  = 60*60*24*7;
 @implementation ZBWebImageManager
 + (ZBWebImageManager *)sharedInstance{
     static ZBWebImageManager *imageInstance=nil;
@@ -110,28 +110,13 @@ NSString *const ImageDefaultPath =@"AppImage";
 }
 
 - (void)automaticCleanImageCache{
-    
-    [[ZBCacheManager sharedInstance]automaticCleanCacheWithPath:[self imageFilePath] completion:nil];
+    [[ZBCacheManager sharedInstance] automaticCleanCacheWithTime:-ImageCacheMaxCacheAge path:[self imageFilePath] completion:nil];
 }
 
 - (void)backgroundCleanImageCache {
-    Class UIApplicationClass = NSClassFromString(@"UIApplication");
-    if(!UIApplicationClass || ![UIApplicationClass respondsToSelector:@selector(sharedApplication)]) {
-        return;
-    }
-    UIApplication *application = [UIApplication performSelector:@selector(sharedApplication)];
-    __block UIBackgroundTaskIdentifier bgTask = [application beginBackgroundTaskWithExpirationHandler:^{
-        // Clean up any unfinished task business by marking where you
-        // stopped or ending the task outright.
-        [application endBackgroundTask:bgTask];
-        bgTask = UIBackgroundTaskInvalid;
-    }];
-    [[ZBCacheManager sharedInstance]automaticCleanCacheWithPath:[self imageFilePath] completion:^{
-        [application endBackgroundTask:bgTask];
-        bgTask = UIBackgroundTaskInvalid;
-    }];
-    // Start the long-running task and return immediately.
+    [[ZBCacheManager sharedInstance]backgroundCleanCacheWithPath:[self imageFilePath]];
 }
+
 
 - (NSString *)imageFilePath{
     NSString *AppImagePath =  [[[ZBCacheManager sharedInstance]ZBKitPath]stringByAppendingPathComponent:ImageDefaultPath];
