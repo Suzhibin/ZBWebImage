@@ -21,25 +21,16 @@
  *  图片请求 默认缓存路径
  *
  *  @param imageUrl         图片请求的协议地址
- *  @param placeholder       占位图片
+ *  @param completion        完成后操作
  */
-- (void)zb_setImageWithURL:(NSString *)imageUrl placeholderImage:(UIImage *)placeholder;
-
-/**
- *  图片请求 可自定义缓存路径
- *
- *  @param imageUrl         图片请求的协议地址
- *  @param placeholder       占位图片
- *  @param path              自定义路径
- */
-- (void)zb_setImageWithURL:(NSString *)imageUrl placeholderImage:(UIImage *)placeholder path:(NSString *)path;
+- (void)zb_setImageWithURL:(NSString *)imageUrl completion:(downloadCompletion)completion;
 /**
  *  图片请求 默认缓存路径
  *
  *  @param imageUrl         图片请求的协议地址
- *  @param completion        完成后操作
+ *  @param placeholder       占位图片
  */
-- (void)zb_setImageWithURL:(NSString *)imageUrl completion:(downloadCompletion)completion;
+- (void)zb_setImageWithURL:(NSString *)imageUrl placeholderImage:(UIImage *)placeholder;
 
 /**
  *  图片请求 默认缓存路径
@@ -49,6 +40,16 @@
  *  @param completion        完成后操作
  */
 - (void)zb_setImageWithURL:(NSString *)imageUrl placeholderImage:(UIImage *)placeholder completion:(downloadCompletion)completion;
+
+/**
+ *  图片请求 可自定义缓存路径
+ *
+ *  @param imageUrl         图片请求的协议地址
+ *  @param placeholder       占位图片
+ *  @param path              自定义路径
+ */
+- (void)zb_setImageWithURL:(NSString *)imageUrl placeholderImage:(UIImage *)placeholder path:(NSString *)path;
+
 
 /**
  *  图片请求 可自定义缓存路径

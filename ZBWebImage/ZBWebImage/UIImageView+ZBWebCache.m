@@ -14,20 +14,20 @@
     [self zb_setImageWithURL:imageUrl completion:nil];
 }
 
-- (void)zb_setImageWithURL:(NSString *)imageUrl placeholderImage:(UIImage *)placeholder{
-    [self zb_setImageWithURL:imageUrl placeholderImage:placeholder completion:nil];
-}
-
-- (void)zb_setImageWithURL:(NSString *)imageUrl placeholderImage:(UIImage *)placeholder path:(NSString *)path{
-    [self zb_setImageWithURL:imageUrl placeholderImage:placeholder path:path completion:nil];
-}
-
 - (void)zb_setImageWithURL:(NSString *)imageUrl completion:(downloadCompletion)completion{
     [self zb_setImageWithURL:imageUrl placeholderImage:nil completion:completion];
 }
 
+- (void)zb_setImageWithURL:(NSString *)imageUrl placeholderImage:(UIImage *)placeholder{
+    [self zb_setImageWithURL:imageUrl placeholderImage:placeholder completion:nil];
+}
+
 - (void)zb_setImageWithURL:(NSString *)imageUrl placeholderImage:(UIImage *)placeholder completion:(downloadCompletion)completion{
     [self zb_setImageWithURL:imageUrl placeholderImage:placeholder path:[[ZBWebImageManager sharedInstance]imageFilePath] completion:completion];
+}
+
+- (void)zb_setImageWithURL:(NSString *)imageUrl placeholderImage:(UIImage *)placeholder path:(NSString *)path{
+    [self zb_setImageWithURL:imageUrl placeholderImage:placeholder path:path completion:nil];
 }
 
 - (void)zb_setImageWithURL:(NSString *)imageUrl placeholderImage:(UIImage *)placeholder path:(NSString *)path completion:(downloadCompletion)completion{
