@@ -58,6 +58,7 @@
     self.imageView1=[[UIImageView alloc]initWithFrame:CGRectMake(0, 64, SCREEN_WIDTH, 200)];
     
     [self.view addSubview:self.imageView1];
+    
     [self.imageView1 zb_setImageWithURL:IMAGE1 placeholderImage:[UIImage imageNamed:@"zhanweitu"] completion:^(UIImage *image) {
         //下载完毕显示缓存大小
         [self sizeAndCount];
@@ -66,6 +67,7 @@
     
     self.imageView2=[[UIImageView alloc]initWithFrame:CGRectMake(0, 300, SCREEN_WIDTH, 200)];
     [[ZBWebImageManager sharedInstance]  downloadImageUrl:IMAGE2 completion:^(UIImage *image){
+        
         self.imageView2.image=image;
         //下载完毕显示缓存大小
         [self sizeAndCount];
