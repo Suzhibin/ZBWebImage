@@ -28,7 +28,6 @@ static const NSInteger defaultCacheMaxCacheAge  = 60*60*24*7;
 static const CGFloat unit = 1000.0;
 static const NSInteger timeOut = 60*60;
 @interface ZBCacheManager ()
-
 @property (nonatomic ,copy)NSString *diskCachePath;
 @property (nonatomic ,strong) dispatch_queue_t operationQueue;
 
@@ -52,7 +51,10 @@ static const NSInteger timeOut = 60*60;
          _operationQueue = dispatch_queue_create("com.dispatch.ZBCacheManager", DISPATCH_QUEUE_SERIAL);
         
         [self initCachesfileWithName:defaultCachePath];
-        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(clearAllMemory)
+                                                     name:UIApplicationDidReceiveMemoryWarningNotification
+                                                   object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(automaticCleanCache)
                                                      name:UIApplicationWillTerminateNotification
@@ -66,6 +68,7 @@ static const NSInteger timeOut = 60*60;
 }
 
 - (void)dealloc{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillTerminateNotification object:nil];
     
@@ -194,8 +197,7 @@ static const NSInteger timeOut = 60*60;
 }
 
 - (void)getCacheDataForKey:(NSString *)key path:(NSString *)path value:(ZBCacheValueBlock)value{
-    if (!key)return value(nil,nil);
-    
+    if (!key)return;
     dispatch_async(self.operationQueue,^{
         @autoreleasepool {
             NSString *filePath=[[self cachePathForKey:key path:path]stringByDeletingPathExtension];
@@ -206,6 +208,7 @@ static const NSInteger timeOut = 60*60;
                 });
             }
         }
+
     });
 }
 
@@ -225,9 +228,11 @@ static const NSInteger timeOut = 60*60;
     return array;
 }
 
--(NSDictionary* )getDiskFileAttributes:(NSString *)key{
-    NSString *path =[self diskCachePathForKey:key];
-    NSDictionary *info = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
+-(NSDictionary* )getDiskFileAttributes:(NSString *)key path:(NSString *)path{
+ 
+    NSString *filePath=[[self cachePathForKey:key path:path]stringByDeletingPathExtension];
+
+    NSDictionary *info = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
     return info;
 }
 
@@ -239,11 +244,11 @@ static const NSInteger timeOut = 60*60;
 }
 
 - (NSString *)cachePathForKey:(NSString *)key path:(NSString *)path {
-    NSString *filename = [self codingFileNameForKey:key];
+    NSString *filename = [self MD5StringForKey:key];
     return [path stringByAppendingPathComponent:filename];
 }
 
-- (NSString *)codingFileNameForKey:(NSString *)key {
+- (NSString *)MD5StringForKey:(NSString *)key {
     const char *str = [key UTF8String];
     if (str == NULL) {
         str = "";
@@ -334,9 +339,9 @@ static const NSInteger timeOut = 60*60;
     return size;
 }
 
-#pragma  mark - 清除文件
+#pragma  mark - 设置过期时间 清除某路径缓存文件
 - (void)automaticCleanCache{
-   [self clearCacheWithTime:-defaultCacheMaxCacheAge completion:nil];
+   [self clearCacheWithTime:defaultCacheMaxCacheAge completion:nil];
 }
 
 - (void)clearCacheWithTime:(NSTimeInterval)time completion:(ZBCacheCompletedBlock)completion{
@@ -344,9 +349,10 @@ static const NSInteger timeOut = 60*60;
 }
 
 - (void)clearCacheWithTime:(NSTimeInterval)time path:(NSString *)path completion:(ZBCacheCompletedBlock)completion{
+    if (!time||!path)return;
     dispatch_async(self.operationQueue,^{
-        
-        NSDate *expirationDate = [NSDate dateWithTimeIntervalSinceNow:time];
+        // “-” time
+        NSDate *expirationDate = [NSDate dateWithTimeIntervalSinceNow:-time];
         
         NSDirectoryEnumerator *fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:path];
         
@@ -355,6 +361,7 @@ static const NSInteger timeOut = 60*60;
             
             NSDictionary *info = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
             NSDate *current = [info objectForKey:NSFileModificationDate];
+
             if ([[current laterDate:expirationDate] isEqualToDate:expirationDate]){
                 [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
             }
@@ -380,7 +387,7 @@ static const NSInteger timeOut = 60*60;
         bgTask = UIBackgroundTaskInvalid;
     }];
     // Start the long-running task and return immediately.
-    [self clearCacheWithTime:-defaultCacheMaxCacheAge path:path completion:^{
+    [self clearCacheWithTime:defaultCacheMaxCacheAge path:path completion:^{
         [application endBackgroundTask:bgTask];
         bgTask = UIBackgroundTaskInvalid;
     }];
@@ -390,6 +397,7 @@ static const NSInteger timeOut = 60*60;
     [self backgroundCleanCacheWithPath:self.diskCachePath];
 }
 
+#pragma  mark - 清除单个缓存文件
 - (void)clearCacheForkey:(NSString *)key{
  
     [self clearCacheForkey:key completion:nil];
@@ -401,9 +409,10 @@ static const NSInteger timeOut = 60*60;
 }
 
 - (void)clearCacheForkey:(NSString *)key path:(NSString *)path completion:(ZBCacheCompletedBlock)completion{
-    if (!key)return;
-    NSString *filePath=[[self cachePathForKey:key path:path]stringByDeletingPathExtension];
+    if (!key||!path)return;
     dispatch_async(self.operationQueue,^{
+        
+        NSString *filePath=[[self cachePathForKey:key path:path]stringByDeletingPathExtension];
         
         [[NSFileManager defaultManager]removeItemAtPath:filePath error:nil];
         
@@ -414,7 +423,38 @@ static const NSInteger timeOut = 60*60;
         }
     });
 }
+#pragma  mark - 设置过期时间 清除单个缓存文件
+- (void)clearCacheForkey:(NSString *)key time:(NSTimeInterval)time{
+    [self clearCacheForkey:key time:time completion:nil];
+}
 
+- (void)clearCacheForkey:(NSString *)key time:(NSTimeInterval)time completion:(ZBCacheCompletedBlock)completion{
+    [self clearCacheForkey:key time:time path:self.diskCachePath completion:completion];
+}
+
+- (void)clearCacheForkey:(NSString *)key time:(NSTimeInterval)time path:(NSString *)path completion:(ZBCacheCompletedBlock)completion{
+    if (!time||!key||!path)return;
+    dispatch_async(self.operationQueue,^{
+        // “-” time
+        NSDate *expirationDate = [NSDate dateWithTimeIntervalSinceNow:-time];
+        
+        NSString *filePath=[[self cachePathForKey:key path:path]stringByDeletingPathExtension];
+        
+        NSDictionary *info = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
+        NSDate *current = [info objectForKey:NSFileModificationDate];
+        
+        if ([[current laterDate:expirationDate] isEqualToDate:expirationDate]){
+            [[NSFileManager defaultManager]removeItemAtPath:filePath error:nil];
+        }
+        
+        if (completion) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion();
+            });
+        }
+    });
+}
+#pragma  mark - 清除默认路径缓存
 - (void)clearCache{
      [self clearCacheOnCompletion:nil];
 }
@@ -422,7 +462,6 @@ static const NSInteger timeOut = 60*60;
 - (void)clearCacheOnCompletion:(ZBCacheCompletedBlock)completion{
 
     dispatch_async(self.operationQueue, ^{
-
             //[self clearDiskWithpath:self.diskCachePath];
         [[NSFileManager defaultManager] removeItemAtPath:self.diskCachePath error:nil];
         [self createDirectoryAtPath:self.diskCachePath];
@@ -433,12 +472,13 @@ static const NSInteger timeOut = 60*60;
         }
     });
 }
-
+#pragma  mark - 清除自定义路径缓存
 - (void)clearDiskWithpath:(NSString *)path{
     [self clearDiskWithpath:path completion:nil];
 }
 
 - (void)clearDiskWithpath:(NSString *)path completion:(ZBCacheCompletedBlock)completion{
+    if (!path)return;
      dispatch_async(self.operationQueue, ^{
   
            NSDirectoryEnumerator *fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:path];
@@ -447,16 +487,17 @@ static const NSInteger timeOut = 60*60;
              NSString *filePath = [path stringByAppendingPathComponent:fileName];
          
              [[NSFileManager defaultManager] removeItemAtPath:filePath error:nil];
-    
          }
          if (completion) {
              dispatch_async(dispatch_get_main_queue(),^{
                  completion();
              });
          }
-
      });
 }
 
+- (void)clearAllMemory{
+    [[NSURLCache sharedURLCache]removeAllCachedResponses];
+}
 
 @end

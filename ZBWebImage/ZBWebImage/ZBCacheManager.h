@@ -22,7 +22,7 @@
 #import <UIKit/UIKit.h>
 
 typedef void(^ZBCacheIsSuccessBlock)(BOOL isSuccess);
-typedef void(^ZBCacheValueBlock)(NSData *data,NSString *filePath);
+typedef void(^ZBCacheValueBlock)(id responseObj,NSString *filePath);
 typedef void(^ZBCacheCompletedBlock)();
 
 /**
@@ -30,6 +30,17 @@ typedef void(^ZBCacheCompletedBlock)();
  */
 @interface ZBCacheManager : NSObject
 
+/**
+ * The maximum "total cost" of the in-memory image cache. The cost function is the number of pixels held in memory.
+ * 设置缓存占用的内存大小，并不是一个严格的限制，当总数超过了totalCostLimit设定的值，系统会清除一部分缓存，直至总消耗低于totalCostLimit的值。
+ */
+@property (assign, nonatomic) NSUInteger memoryTotalCost;
+
+/**
+ * The maximum number of objects the cache should hold.
+ * 设置内存对象的大小，这也不是一个严格的限制。
+ */
+@property (assign, nonatomic) NSUInteger memoryCountLimit;
 
 //返回单例对象
 + (ZBCacheManager *)sharedInstance;
@@ -153,17 +164,17 @@ typedef void(^ZBCacheCompletedBlock)();
 - (BOOL)diskCacheExistsWithKey:(NSString *)key path:(NSString *)path;
 
 /**
- *  返回二进制数据
+ *  返回数据及路径
  *  @param  key         存储的文件的url
- *  @param  value       返回在本地的存储文件的二进制数据
+ *  @param  value       返回在本地的数据及存储文件路径
  */
 - (void)getCacheDataForKey:(NSString *)key value:(ZBCacheValueBlock)value;
 
 /**
- *  返回二进制数据
+ *  返回数据及路径
  *  @param  key         存储的文件的url
  *  @param  path        存储的文件的路径
- *  @param  value       返回在本地的存储文件的二进制数据
+ *  @param  value       返回在本地的数据及存储文件路径
  */
 - (void)getCacheDataForKey:(NSString *)key path:(NSString *)path value:(ZBCacheValueBlock)value;
 
@@ -175,10 +186,11 @@ typedef void(^ZBCacheCompletedBlock)();
 - (NSArray *)getDiskCacheFileWithPath:(NSString *)path;
 
 /**
- *  返回缓存文件的属性     只支持默认缓存路径
+ *  返回缓存文件的属性     
+ * @param path          路径
  *  @param key          缓存文件
  */
--(NSDictionary* )getDiskFileAttributes:(NSString *)key;
+-(NSDictionary* )getDiskFileAttributes:(NSString *)key path:(NSString *)path;
 
 /**
  *  查找存储的文件         默认缓存路径/Library/Caches/ZBKit/AppCache
@@ -227,6 +239,7 @@ typedef void(^ZBCacheCompletedBlock)();
  @return count          数量
  */
 - (NSUInteger)getFileCountWithpath:(NSString *)path;
+
 /**
  显示文件的大小单位
  
@@ -251,7 +264,7 @@ typedef void(^ZBCacheCompletedBlock)();
 - (NSUInteger)diskFreeSystemSpace;
 
 /**
- *  清除过期缓存
+ *  设置过期时间 清除路径下的全部过期缓存文件 默认路径/Library/Caches/ZBKit/AppCache
  *  Remove all expired cached file from disk
  *  @param time         时间
  *  @param completion   block 后续操作
@@ -259,7 +272,7 @@ typedef void(^ZBCacheCompletedBlock)();
 - (void)clearCacheWithTime:(NSTimeInterval)time completion:(ZBCacheCompletedBlock)completion;
 
 /** 
- *  清除过期缓存 自定义路径
+ *  设置过期时间 清除路径下的全部过期缓存文件 自定义路径
  *  Remove all expired cached file from disk
  *  @param time         时间
  *  @param path         路径
@@ -294,6 +307,31 @@ typedef void(^ZBCacheCompletedBlock)();
  *  @param completion   block 后续操作
  */
 - (void)clearCacheForkey:(NSString *)key path:(NSString *)path completion:(ZBCacheCompletedBlock)completion;
+
+/** 
+ *  设置过期时间 清除某一个缓存文件  默认路径/Library/Caches/ZBKit/AppCache
+ *  @param key          请求的协议地址
+ *  @param time         时间 注:时间前要加 “-” 减号
+ */
+- (void)clearCacheForkey:(NSString *)key time:(NSTimeInterval)time;
+
+/**
+ *  设置过期时间 清除某一个缓存文件  默认路径/Library/Caches/ZBKit/AppCache
+ *  @param key          请求的协议地址
+ *  @param time         时间 注:时间前要加 “-” 减号
+ *  @param completion   block 后续操作
+ */
+- (void)clearCacheForkey:(NSString *)key time:(NSTimeInterval)time completion:(ZBCacheCompletedBlock)completion;
+
+/**
+ *  设置过期时间 清除某一个缓存文件  自定义路径
+ *  Remove all expired cached file from disk
+ *  @param key          请求的协议地址
+ *  @param time         时间 注:时间前要加 “-” 减号
+ *  @param path         路径
+ *  @param completion   block 后续操作
+ */
+- (void)clearCacheForkey:(NSString *)key time:(NSTimeInterval)time path:(NSString *)path completion:(ZBCacheCompletedBlock)completion;
 
 /**
  *  清除磁盘缓存 /Library/Caches/ZBKit/AppCache
