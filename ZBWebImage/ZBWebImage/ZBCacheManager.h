@@ -22,7 +22,7 @@
 #import <UIKit/UIKit.h>
 
 typedef void(^ZBCacheIsSuccessBlock)(BOOL isSuccess);
-typedef void(^ZBCacheValueBlock)(id responseObj,NSString *filePath);
+typedef void(^ZBCacheValueBlock)(NSData *data,NSString *filePath);
 typedef void(^ZBCacheCompletedBlock)();
 
 /**

@@ -101,12 +101,12 @@ static const NSInteger ImageCacheMaxCacheAge  = 60*60*24*7;
     [[ZBCacheManager sharedInstance]clearDiskWithpath:[self imageFilePath] completion:completion];
 }
 
-- (void)clearImageForkey:(NSString *)key{
-    [self clearImageForkey:key completion:nil];
+- (void)clearImageForkey:(NSString *)key completion:(ZBCacheCompletedBlock)completion;{
+    [self clearImageForkey:key path:[self imageFilePath] completion:completion];
 }
 
-- (void)clearImageForkey:(NSString *)key completion:(ZBCacheCompletedBlock)completion{
-    [[ZBCacheManager sharedInstance]clearCacheForkey:key path:[self imageFilePath] completion:completion];
+- (void)clearImageForkey:(NSString *)key path:(NSString *)path completion:(ZBCacheCompletedBlock)completion{
+    [[ZBCacheManager sharedInstance]clearCacheForkey:key path:path completion:completion];
 }
 
 - (void)automaticCleanImageCache{

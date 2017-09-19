@@ -80,14 +80,14 @@ typedef void (^downloadCompletion)(UIImage *image);
  *  清除某个图片缓存
  *  @param key              图片的地址
  */
-- (void)clearImageForkey:(NSString *)key;
+- (void)clearImageForkey:(NSString *)key completion:(ZBCacheCompletedBlock)completion;
 
 /**
  *  清除某个图片缓存
  *  @param key              图片的地址
  *  @param completion        block 后续操作
  */
-- (void)clearImageForkey:(NSString *)key completion:(ZBCacheCompletedBlock)completion;
+- (void)clearImageForkey:(NSString *)key path:(NSString *)path completion:(ZBCacheCompletedBlock)completion;
 
 /**
  *  图片存储路径 /Library/Caches/ZBKit/AppImage
