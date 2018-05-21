@@ -37,25 +37,25 @@
     [dismiss setTitle:@"返回上一页" forState:UIControlStateNormal];
     [dismiss setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     dismiss.backgroundColor=[UIColor brownColor];
-    dismiss.frame=CGRectMake(20,20,100, 30);
+    dismiss.frame=CGRectMake(20,60,100, 30);
     [dismiss addTarget:self action:@selector(dismissClicked:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:dismiss];
     
 
 
-    UILabel *label1=[[UILabel alloc]initWithFrame:CGRectMake(10,530, 200, 30)];
+    UILabel *label1=[[UILabel alloc]initWithFrame:CGRectMake(10,560, 200, 30)];
     label1.textAlignment=NSTextAlignmentLeft;
     label1.backgroundColor=[UIColor whiteColor];
     [self.view addSubview:label1];
     self.label1=label1;
     
-    UILabel *label2=[[UILabel alloc]initWithFrame:CGRectMake(10,570, 200, 30)];
+    UILabel *label2=[[UILabel alloc]initWithFrame:CGRectMake(10,600, 200, 30)];
     label2.textAlignment=NSTextAlignmentLeft;
     label2.backgroundColor=[UIColor whiteColor];
     [self.view addSubview:label2];
     self.label2=label2;
     
-    self.imageView1=[[UIImageView alloc]initWithFrame:CGRectMake(0, 64, SCREEN_WIDTH, 200)];
+    self.imageView1=[[UIImageView alloc]initWithFrame:CGRectMake(0, 94, SCREEN_WIDTH, 200)];
     
     [self.view addSubview:self.imageView1];
     
@@ -65,7 +65,7 @@
         
     }];
     
-    self.imageView2=[[UIImageView alloc]initWithFrame:CGRectMake(0, 300, SCREEN_WIDTH, 200)];
+    self.imageView2=[[UIImageView alloc]initWithFrame:CGRectMake(0, 330, SCREEN_WIDTH, 200)];
     [[ZBWebImageManager sharedInstance]  downloadImageUrl:IMAGE2 completion:^(UIImage *image){
         
         self.imageView2.image=image;
@@ -85,7 +85,7 @@
         [button1 setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         button1.tag=2000+i;
         button1.backgroundColor=[UIColor brownColor];
-        button1.frame=CGRectMake(200,530+40*i,150, 30);
+        button1.frame=CGRectMake(200,560+40*i,150, 30);
         [button1 addTarget:self action:@selector(button1Clicked:) forControlEvents:UIControlEventTouchUpInside];
         [self.view addSubview:button1];
     }

@@ -19,7 +19,6 @@
 
 
 #import "ZBCacheManager.h"
-#import "NSFileManager+pathMethod.h"
 #import <CommonCrypto/CommonDigest.h>
 NSString *const PathSpace =@"ZBKit";
 NSString *const defaultCachePath =@"AppCache";
@@ -123,11 +122,8 @@ static const NSInteger timeOut = 60*60;
 - (BOOL)diskCacheExistsWithKey:(NSString *)key path:(NSString *)path{
     
     NSString *codingPath=[[self cachePathForKey:key path:path] stringByDeletingPathExtension];
-    BOOL exists=NO;
-    if ([[NSFileManager defaultManager] fileExistsAtPath:codingPath]&&[NSFileManager isTimeOutWithPath:codingPath timeOut:timeOut]==NO) {
-        return exists=YES;
-    }
-    return exists;
+
+    return [[NSFileManager defaultManager] fileExistsAtPath:codingPath];
 }
 
 #pragma  mark - 存储
