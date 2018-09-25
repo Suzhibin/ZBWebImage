@@ -62,7 +62,7 @@ static const NSInteger ImageCacheMaxCacheAge  = 60*60*24*7;
     }else{
         [self requestImageUrl:imageUrl completion:^(UIImage *image){
             
-            [[ZBCacheManager sharedInstance]storeContent:image forKey:imageUrl path:path];
+            [[ZBCacheManager sharedInstance]storeContent:image forKey:imageUrl path:path isSuccess:nil];
             
             completion(image);
         }];
