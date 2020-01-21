@@ -26,7 +26,6 @@ static const NSInteger ImageCacheMaxCacheAge  = 60*60*24*7;
     if (self) {
         
         [[ZBCacheManager sharedInstance]createDirectoryAtPath:[self imageFilePath]];
-        [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(automaticCleanImageCache) name:UIApplicationDidReceiveMemoryWarningNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(automaticCleanImageCache)
                                                      name:UIApplicationWillTerminateNotification
@@ -98,6 +97,7 @@ static const NSInteger ImageCacheMaxCacheAge  = 60*60*24*7;
 }
 
 - (void)clearImageFileCompletion:(ZBCacheCompletedBlock)completion{
+    [[ZBCacheManager sharedInstance]clearMemory];
     [[ZBCacheManager sharedInstance]clearDiskWithpath:[self imageFilePath] completion:completion];
 }
 

@@ -9,9 +9,9 @@
 #import "ImageViewController.h"
 #import "ZBWebImageManager.h"
 #import "UIImageView+ZBWebCache.h"
-#define IMAGE1   @"http://img04.tooopen.com/images/20130701/tooopen_10055061.jpg"
+#define IMAGE1   @"http://t8.baidu.com/it/u=1484500186,1503043093&fm=79&app=86&f=JPEG?w=1280&h=853"
 
-#define IMAGE2   @"http://img06.tooopen.com/images/20161214/tooopen_sy_190570171299.jpg"
+#define IMAGE2   @"http://t9.baidu.com/it/u=1307125826,3433407105&fm=79&app=86&f=JPEG?w=5760&h=3240"
 //屏幕宽
 #define SCREEN_WIDTH                ([UIScreen mainScreen].bounds.size.width)
 //屏幕高
