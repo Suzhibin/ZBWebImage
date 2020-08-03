@@ -119,11 +119,25 @@ static const CGFloat unit = 1000.0;
     }
 }
 
-- (BOOL)diskCacheExistsWithKey:(NSString *)key{
-    return [self diskCacheExistsWithKey:key path:self.diskCachePath];
+#pragma  mark - 缓存是否存在
+- (BOOL)cacheExistsForKey:(NSString *)key{
+    return [self cacheExistsForKey:key path:self.diskCachePath];
 }
 
-- (BOOL)diskCacheExistsWithKey:(NSString *)key path:(NSString *)path{
+- (BOOL)cacheExistsForKey:(NSString *)key path:(NSString *)path{
+    
+    BOOL isInMemoryCache =  [self.memoryCache objectForKey:key];
+    if (isInMemoryCache) {
+        return YES;
+    }
+    return [self diskCacheExistsForKey:key path:path];
+}
+
+- (BOOL)diskCacheExistsForKey:(NSString *)key{
+    return [self diskCacheExistsForKey:key path:self.diskCachePath];
+}
+
+- (BOOL)diskCacheExistsForKey:(NSString *)key path:(NSString *)path{
     
     NSString *isExists=[[self getDiskCacheWithCodingForKey:key path:path] stringByDeletingPathExtension];
 
@@ -136,7 +150,14 @@ static const CGFloat unit = 1000.0;
 }
 
 - (void)storeContent:(NSObject *)content forKey:(NSString *)key path:(NSString *)path isSuccess:(ZBCacheIsSuccessBlock)isSuccess{
-
+    if (!content || !key) {
+        if (isSuccess) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                isSuccess(NO);
+            });
+        }
+        return;
+    }
     [self.memoryCache setObject:content forKey:key ];
     
     dispatch_async(self.operationQueue,^{
@@ -156,10 +177,8 @@ static const CGFloat unit = 1000.0;
     }
     if ([content isKindOfClass:[NSData class]]) {
         return  [(NSData *)content writeToFile:path atomically:YES];
-    }else if ([content isKindOfClass:[UIImage class]]) {
-        return [UIImageJPEGRepresentation((UIImage *)content,(CGFloat)0.9) writeToFile:path atomically:YES];
     }else {
-       // [NSException raise:@"非法的文件内容" format:@"文件类型%@异常。", NSStringFromClass([content class])];
+        NSLog(@"文件类型:%@,沙盒存储失败。",NSStringFromClass([content class]));
         return NO;
     }
     return NO;
@@ -217,6 +236,11 @@ static const CGFloat unit = 1000.0;
  
     NSString *filePath=[[self getDiskCacheWithCodingForKey:key path:path]stringByDeletingPathExtension];
 
+    return [self getDiskFileAttributesWithFilePath:filePath];
+}
+
+-  (NSDictionary* )getDiskFileAttributesWithFilePath:(NSString *)filePath{
+    
     NSDictionary *info = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
     return info;
 }

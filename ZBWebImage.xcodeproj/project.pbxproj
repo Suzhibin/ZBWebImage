@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7D27A1881E78E278004A94EB /* NSFileManager+pathMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D27A1851E78E278004A94EB /* NSFileManager+pathMethod.m */; };
 		7D4F74E91E77B1CE00C6A03E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D4F74E81E77B1CE00C6A03E /* main.m */; };
 		7D4F74EC1E77B1CE00C6A03E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D4F74EB1E77B1CE00C6A03E /* AppDelegate.m */; };
 		7D4F74EF1E77B1CE00C6A03E /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D4F74EE1E77B1CE00C6A03E /* ViewController.m */; };
@@ -41,8 +40,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		7D27A1841E78E278004A94EB /* NSFileManager+pathMethod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+pathMethod.h"; sourceTree = "<group>"; };
-		7D27A1851E78E278004A94EB /* NSFileManager+pathMethod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+pathMethod.m"; sourceTree = "<group>"; };
 		7D4F74E41E77B1CE00C6A03E /* ZBWebImage.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZBWebImage.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D4F74E81E77B1CE00C6A03E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		7D4F74EA1E77B1CE00C6A03E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -166,8 +163,6 @@
 			children = (
 				9F665B3F23D6D120006A0EF8 /* ZBCacheManager.h */,
 				9F665B3E23D6D120006A0EF8 /* ZBCacheManager.m */,
-				7D27A1841E78E278004A94EB /* NSFileManager+pathMethod.h */,
-				7D27A1851E78E278004A94EB /* NSFileManager+pathMethod.m */,
 				7D4F751B1E77B42800C6A03E /* ZBWebImageManager.h */,
 				7D4F751C1E77B42800C6A03E /* ZBWebImageManager.m */,
 				7D4F751D1E77B42800C6A03E /* UIImageView+ZBWebCache.h */,
@@ -313,7 +308,6 @@
 			files = (
 				7D4F74EF1E77B1CE00C6A03E /* ViewController.m in Sources */,
 				7D4F752B1E77C3A300C6A03E /* ImageViewController.m in Sources */,
-				7D27A1881E78E278004A94EB /* NSFileManager+pathMethod.m in Sources */,
 				7D4F74EC1E77B1CE00C6A03E /* AppDelegate.m in Sources */,
 				7D4F75201E77B42800C6A03E /* UIImageView+ZBWebCache.m in Sources */,
 				7D4F751F1E77B42800C6A03E /* ZBWebImageManager.m in Sources */,

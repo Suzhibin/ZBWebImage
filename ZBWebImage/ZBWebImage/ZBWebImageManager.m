@@ -7,7 +7,6 @@
 //
 
 #import "ZBWebImageManager.h"
-#import "NSFileManager+pathMethod.h"
 
 NSString *const ImageDefaultPath =@"AppImage";
 static const NSInteger ImageCacheMaxCacheAge  = 60*60*24*7;
@@ -49,7 +48,7 @@ static const NSInteger ImageCacheMaxCacheAge  = 60*60*24*7;
 
 - (void)downloadImageUrl:(NSString *)imageUrl path:(NSString *)path completion:(downloadCompletion)completion{
     
-    if ([[ZBCacheManager sharedInstance]diskCacheExistsWithKey:imageUrl path:path]) {
+    if ([[ZBCacheManager sharedInstance]cacheExistsForKey:imageUrl path:path]) {
         
         [[ZBCacheManager sharedInstance]getCacheDataForKey:imageUrl path:path value:^(NSData *data,NSString *filePath) {
             
@@ -60,8 +59,8 @@ static const NSInteger ImageCacheMaxCacheAge  = 60*60*24*7;
         
     }else{
         [self requestImageUrl:imageUrl completion:^(UIImage *image){
-            
-            [[ZBCacheManager sharedInstance]storeContent:image forKey:imageUrl path:path isSuccess:nil];
+            NSData *data= UIImageJPEGRepresentation((UIImage *)image,(CGFloat)0.9);
+            [[ZBCacheManager sharedInstance]storeContent:data forKey:imageUrl path:path isSuccess:nil];
             
             completion(image);
         }];
