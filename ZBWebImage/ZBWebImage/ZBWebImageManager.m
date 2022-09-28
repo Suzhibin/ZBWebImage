@@ -53,16 +53,18 @@ static const NSInteger ImageCacheMaxCacheAge  = 60*60*24*7;
         [[ZBCacheManager sharedInstance]getCacheDataForKey:imageUrl inPath:path value:^(NSData *data,NSString *filePath) {
             
             UIImage *image=[UIImage imageWithData:data];
-            
-            completion(image) ;
+            if(completion){
+                completion(image) ;
+            }
         }];
         
     }else{
         [self requestImageUrl:imageUrl completion:^(UIImage *image){
             NSData *data= UIImageJPEGRepresentation((UIImage *)image,(CGFloat)0.9);
             [[ZBCacheManager sharedInstance]storeContent:data forKey:imageUrl inPath:path isSuccess:nil];
-            
-            completion(image);
+            if(completion){
+                completion(image);
+            }
         }];
     }
 }
@@ -78,7 +80,9 @@ static const NSInteger ImageCacheMaxCacheAge  = 60*60*24*7;
         UIImage *image=[UIImage imageWithData:data];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            completion(image);
+            if(completion){
+                completion(image);
+            }
         });
     });
 }
